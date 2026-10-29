@@ -1,0 +1,17 @@
+{
+  "widths": [
+    320,
+    390,
+    768,
+    1440
+  ],
+  "localizedRoutes": 26,
+  "browser": "Chromium 145 / Playwright 1.58.2",
+  "testedAt": "2026-10-26T15:09:50.932Z",
+  "routeViewportChecks": 104,
+  "failed": 0,
+  "durationMs": 31574.965999999997,
+  "structuralTests": 6,
+  "passed": 23,
+  "skipped": 0
+}
