@@ -1,4 +1,10 @@
 {
+  "testedAt": "2026-10-29T14:35:59.167Z",
+  "durationMs": 35222.549,
+  "passed": 26,
+  "failed": 0,
+  "skipped": 0,
+  "structuralTests": 6,
   "widths": [
     320,
     390,
@@ -6,12 +12,11 @@
     1440
   ],
   "localizedRoutes": 26,
-  "browser": "Chromium 145 / Playwright 1.58.2",
-  "testedAt": "2026-10-26T15:09:50.932Z",
   "routeViewportChecks": 104,
-  "failed": 0,
-  "durationMs": 31574.965999999997,
-  "structuralTests": 6,
-  "passed": 23,
-  "skipped": 0
+  "accessibilityScans": 14,
+  "browser": "Chromium 145 / Playwright 1.58.2",
+  "applicationCommit": "b126f2564723f78926a33b03d5a9f3d2cbdd034f",
+  "applicationCI": "https://github.com/auturock067-spec/tea-source/actions/runs/40892747473",
+  "productionURL": null,
+  "blocker": "GitHub owner verification required to save Cloudflare installation access to tea-source; owner currently unable to verify."
 }

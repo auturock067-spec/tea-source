@@ -1,6 +1,6 @@
 # Cloudflare Pages Deployment and Operations
 
-Updated 2026-10-26. **Runbook; deployment, preview and update-trigger verification are pending until real evidence is appended.** A planned hostname is not proof of a deployment.
+Updated 2026-10-26. **Runbook; deployment remains blocked by GitHub owner verification as of 2026-10-29.** A planned hostname is not proof of a deployment.
 
 ## Project boundaries and prerequisites
 
@@ -63,4 +63,10 @@ Monthly: check uptime/links, dependency advisories and official compliance chang
 
 ## Release evidence to fill
 
-Production URL: pending. Preview URL: pending. Commit/PR/CI: pending. First deployment ID: pending. Git-triggered update ID: pending. Rollback eligibility/drill: pending. Local/browser/production reports: pending. Account or platform blockers: pending inspection, not assumed.
+Production URL: **none verified**. Preview URL: **none created**. Application commit: `b126f2564723f78926a33b03d5a9f3d2cbdd034f`. PR: https://github.com/auturock067-spec/tea-source/pull/1 (merged). Main CI: https://github.com/auturock067-spec/tea-source/actions/runs/40892747473 (success). First deployment, automatic update and rollback: **not executed**.
+
+## Exact blocker and preserved checkpoint — 2026-10-29
+
+Cloudflare account is accessible. Its existing GitHub App installation `167224604` is restricted to selected repositories and tea-source has not been saved into that selection. The owner explicitly approved adding only tea-source. Clicking Save required renewed GitHub owner verification; an email challenge was requested, and the owner reported being unable to complete it. Therefore no Cloudflare project was created and no HTTPS production address is claimed.
+
+Resume at https://github.com/settings/installations/167224604: complete the owner verification, verify that the selected repositories include tea-source, and save the approved addition if still pending. Do not select All repositories or change existing selections. Then create the new Pages Git project using the settings above, verify its actual URL and commit, make a reviewed subsequent update to prove the trigger, and perform/document rollback between eligible production versions. No rebuilding is needed.
