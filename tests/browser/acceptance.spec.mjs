@@ -57,3 +57,22 @@ test('root redirect, missing page, robots, sitemap and HTTP security headers',as
  const home=await request.get('/en/');expect(home.headers()['content-security-policy']).toContain("connect-src 'none'");expect(home.headers()['x-content-type-options']).toBe('nosniff');
  expect((await request.get('/sitemap.xml')).status()).toBe(200);expect(await(await request.get('/robots.txt')).text()).toContain('Sitemap:');
 });
+test('every category preselects correctly and invalid query input is ignored',async({page})=>{
+ for(const tea of ['green','black','oolong','white','dark','jasmine']){
+  await page.goto(`/en/tea-library/${tea}/`);await page.getByRole('link',{name:'Start a brief for this tea'}).click();await expect(page.locator('#tea')).toHaveValue(tea);
+ }
+ await page.goto('/en/request-sourcing/?tea=%3Cimg%20src%3Dx%3E');await expect(page.locator('#tea')).toHaveValue('');await expect(page.locator('img[src="x"]')).toHaveCount(0);
+});
+test('RFQ requires acknowledgement and rejects whitespace and out-of-range quantity',async({page})=>{
+ await page.goto('/en/request-sourcing/');await fillBrief(page,'en');await page.locator('[name=acknowledge]').uncheck();await page.locator('#rfq-form button[type=submit]').click();await expect(page.locator('#brief-output')).toBeHidden();
+ await page.locator('[name=acknowledge]').check();await page.locator('#quantity').fill('1000000.1');await page.locator('#rfq-form button[type=submit]').click();await expect(page.locator('#brief-output')).toBeHidden();
+ await page.locator('#quantity').fill('0');await page.locator('#rfq-form button[type=submit]').click();await expect(page.locator('#brief-output')).toBeHidden();
+ await page.locator('#quantity').fill('10');await page.locator('#specifications').fill('   ');await page.locator('#rfq-form button[type=submit]').click();await expect(page.locator('#brief-output')).toBeHidden();await expect(page.locator('#specifications')).toBeFocused();
+ await page.locator('#specifications').fill('Green tea for retail; details to confirm.');await page.locator('#rfq-form button[type=submit]').click();await expect(page.locator('#brief-output')).toBeVisible();
+});
+test('edited brief exports current text and denied clipboard offers manual copying',async({page})=>{
+ await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw new Error('Permission denied for acceptance simulation');}}}));
+ await page.goto('/en/request-sourcing/');await fillBrief(page,'en');await page.locator('#rfq-form button[type=submit]').click();await page.locator('#brief-text').fill('Edited acceptance brief — 20 kg; 当前版本。');await page.locator('#copy-brief').click();await expect(page.locator('#brief-status')).toContainText('Clipboard access was unavailable');
+ expect(await page.locator('#brief-text').evaluate(e=>e.selectionEnd-e.selectionStart)).toBeGreaterThan(10);
+ const downloadPromise=page.waitForEvent('download');await page.locator('#download-brief').click();const download=await downloadPromise;expect(await readFile(await download.path(),'utf8')).toContain('Edited acceptance brief — 20 kg; 当前版本。');
+});
